@@ -18,23 +18,23 @@ gsutil versioning set on gs://${PROJECT_ID}-tf-state
 gcloud auth application-default login
 ```
 
-## サンプルアプリケーションのコンテナイメージビルド
-
-https://cloud.google.com/sql/docs/postgres/connect-instance-cloud-run?hl=ja#configure_a_sample_app
-
 ## Terraform 実行
-
-### Cloud SQL 関連以外を構築
 
 ```sh
 cd terraform
 terraform init -reconfigure
 terraform apply
+# output に表示される ip アドレスにアクセスして動作確認 (apply 後数分後)
 ```
 
-### Cloud SQL 関連を構築
+## サンプルアプリケーションのコンテナイメージビルド
+
+https://cloud.google.com/sql/docs/postgres/connect-instance-cloud-run?hl=ja#configure_a_sample_app
+
+## Cloud SQL にクエリを実行する
 
 ```sh
-# Cloud SQL 関連コードのコメントアウトを解除
-terraform apply
+# Cloud SQL インスタンスの コンソール画面から Cloud Shell を起動
+gcloud sql connect gcp-run-sql-instance --user=demo_user --database=demo_db --quiet
+SELECT * FROM votes;
 ```

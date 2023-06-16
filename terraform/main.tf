@@ -180,10 +180,33 @@ resource "google_sql_database_instance" "default" {
   region           = "asia-northeast1"
   database_version = "POSTGRES_14"
   settings {
-    tier = "db-f1-micro"
+    tier              = "db-custom-2-13312"
+    availability_type = "REGIONAL"
+
+    backup_configuration {
+      enabled = true
+    }
   }
 
-  deletion_protection = "true"
+  deletion_protection = "false"
+}
+
+resource "google_sql_database_instance" "replica" {
+  name             = "gcp-run-sql-instance-replica"
+  database_version = "POSTGRES_14"
+  region           = "asia-northeast1"
+
+  master_instance_name = google_sql_database_instance.default.name
+
+  settings {
+    tier              = "db-custom-2-7680"
+    availability_type = "ZONAL"
+  }
+
+  replica_configuration {
+    connect_retry_interval = 60
+    failover_target        = false
+  }
 }
 
 resource "google_sql_user" "default" {
